@@ -13,6 +13,8 @@
 		FC77FA1424FE9A490064194C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC77FA1224FE9A490064194C /* Main.storyboard */; };
 		FC77FA1624FE9A4A0064194C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC77FA1524FE9A4A0064194C /* Assets.xcassets */; };
 		FC77FA1924FE9A4A0064194C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC77FA1724FE9A4A0064194C /* LaunchScreen.storyboard */; };
+		FCB0F52425017BAC00E60FDF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCB0F52325017BAC00E60FDF /* Helpers.swift */; };
+		FCB0F52625017E2900E60FDF /* DMCoinCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCB0F52525017E2900E60FDF /* DMCoinCircleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		FC77FA1524FE9A4A0064194C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC77FA1824FE9A4A0064194C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FC77FA1A24FE9A4A0064194C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FCB0F52325017BAC00E60FDF /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		FCB0F52525017E2900E60FDF /* DMCoinCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMCoinCircleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +63,8 @@
 				FC77FA0C24FE9A490064194C /* AppDelegate.swift */,
 				FC77FA0E24FE9A490064194C /* SceneDelegate.swift */,
 				FC77FA1024FE9A490064194C /* ViewController.swift */,
+				FCB0F52325017BAC00E60FDF /* Helpers.swift */,
+				FCB0F52525017E2900E60FDF /* DMCoinCircleView.swift */,
 				FC77FA1224FE9A490064194C /* Main.storyboard */,
 				FC77FA1524FE9A4A0064194C /* Assets.xcassets */,
 				FC77FA1724FE9A4A0064194C /* LaunchScreen.storyboard */,
@@ -141,6 +147,8 @@
 				FC77FA1124FE9A490064194C /* ViewController.swift in Sources */,
 				FC77FA0D24FE9A490064194C /* AppDelegate.swift in Sources */,
 				FC77FA0F24FE9A490064194C /* SceneDelegate.swift in Sources */,
+				FCB0F52625017E2900E60FDF /* DMCoinCircleView.swift in Sources */,
+				FCB0F52425017BAC00E60FDF /* Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

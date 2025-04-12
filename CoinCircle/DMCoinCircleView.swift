@@ -11,16 +11,12 @@ import UIKit
 class DMCoinCircleView: UIView {
 	
 	// Overlap Order
-	//	forward == 2 overlaps 1, 3 overlaps 2, etc
+	//	true (forward) == 2 overlaps 1, 3 overlaps 2, etc
 	//		i.e. you lay down 1, lay down 2 on top of 1, lay down 3 on top of 2, etc
-	//	backward == 1 overlaps 2, 2 overlaps 3, etc
+	//	false (backward) == 1 overlaps 2, 2 overlaps 3, etc
 	//		i.e. you lay down 1, put 2 under 1, put 3 under 2, etc
-	enum OverlapOrder {
-		case forward, backward
-	}
-	
-	// default order is .forward
-	public var overlapOrder: OverlapOrder = .forward {
+	// default is true
+	public var forward: Bool = true {
 		didSet {
 			needsArrangement = true
 			setNeedsLayout()
@@ -116,6 +112,7 @@ class DMCoinCircleView: UIView {
 	}
 	
 	// image background color (will only be visible if image has alpha)
+	@objc
 	public var imageBackgroundColor: UIColor = .clear {
 		didSet {
 			setNeedsLayout()
@@ -215,7 +212,7 @@ class DMCoinCircleView: UIView {
 			// set "overlapView" property for each image view
 			let n = coinPicViews.count
 			
-			if overlapOrder == .forward {
+			if forward {
 				for i in (0..<n) {
 					if i < (n - 1) {
 						coinPicViews[i].overlapView = coinPicViews[i+1]

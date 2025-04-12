@@ -24,7 +24,7 @@ class ViewController: UIViewController {
 		"Coin Size",
 		"Radius",
 		"Start Angle",
-		"Order",
+		"Forward",
 		"Clockwise",
 		"Outline Width",
 		"Outline Color",
@@ -63,7 +63,7 @@ class ViewController: UIViewController {
 		// additional options to try
 		//coinCircleView.outlineColor = .green
 		//coinCircleView.clockwise = false
-		//coinCircleView.overlapOrder = .backward
+		//coinCircleView.forward = false
 		//coinCircleView.viewBorderColor = .blue
 		//coinCircleView.viewBorderWidth = 1
 		//coinCircleView.imageViewBorderColor = .blue
@@ -119,6 +119,7 @@ class ViewController: UIViewController {
 			let v2 = UILabel()
 			v2.font = fnt
 			v2.text = " "
+			v2.textAlignment = .center
 			infoStacks[1].addArrangedSubview(v2)
 		}
 		infoView.layer.masksToBounds = true
@@ -128,6 +129,9 @@ class ViewController: UIViewController {
 		
 		updateInfoView()
 		infoViewTopConstraint.constant = 0
+		
+		let t = UITapGestureRecognizer(target: self, action: #selector(self.infoViewTapped(_:)))
+		infoView.addGestureRecognizer(t)
 	}
 	
 	// MARK: Demo Stuff
@@ -204,7 +208,7 @@ class ViewController: UIViewController {
 			coinCircleView.coinSize,
 			coinCircleView.radius,
 			coinCircleView.startAngle,
-			coinCircleView.overlapOrder,
+			coinCircleView.forward,
 			coinCircleView.clockwise,
 			coinCircleView.outlineWidth,
 			coinCircleView.outlineColor,
@@ -222,17 +226,162 @@ class ViewController: UIViewController {
 			}
 			if let obj = v as? UIColor {
 				label.backgroundColor = obj
-				label.text = " "
+				label.text = obj == UIColor.clear ? "Clear" : " "
+				print(obj == UIColor.clear)
 			} else if let obj = v as? CGFloat {
 				label.text = "\(obj)"
 			} else if let obj = v as? Bool {
 				label.text = obj == true ? "True" : "False"
-			} else if let obj = v as? DMCoinCircleView.OverlapOrder {
-				label.text = obj == .forward ? "Forward" : "Backward"
 			}
 		}
 		view.bringSubviewToFront(infoView)
 	}
 	
+	@objc
+	func infoViewTapped(_ g: UIGestureRecognizer) -> Void {
+		//print(g.view)
+
+		let touchLocation = g.location(in: nil)
+		let matchingViews = descendants(of: UIApplication.shared.keyWindow!)
+			.filter { $0.convert($0.bounds, to: nil).contains(touchLocation) }
+			.filter { $0 is UILabel }
+		//let labels = matchingViews.filter { $0 is UILabel }
+		matchingViews.forEach {
+			print($0)
+		}
+	
+		//setPropByName("radius", val: 80)
+		let propView = NumericView()
+		view.addSubview(propView)
+		NSLayoutConstraint.activate([
+			propView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -100.0),
+			propView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+		])
+		propView.title = "Radius"
+		propView.theValue = coinCircleView.radius
+		propView.valueChanged = { v in
+			self.coinCircleView.radius = v
+		}
+	}
+	
+	func descendants(of view: UIView) -> [UIView] {
+		return view.subviews + view.subviews.flatMap(descendants(of:))
+	}
+	
 }
 
+extension ViewController {
+	
+	func setPropByName(_ prop:String, val: Any) -> Void {
+		if prop == "radius" {
+			if let t = val as? NSNumber {
+				let v = CGFloat(t.floatValue)
+				coinCircleView.radius = v
+			}
+		}
+	}
+	
+	
+}
+
+class PropertiesView: UIView {
+	
+}
+
+class ChangePropView: UIView {
+	
+	let propStack: UIStackView = {
+		let v = UIStackView()
+		v.axis = .vertical
+		v.spacing = 8
+		return v
+	}()
+	let titleLabel: UILabel = {
+		let v = UILabel()
+		v.text = "title"
+		v.backgroundColor = .yellow
+		return v
+	}()
+	
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		commonInit()
+	}
+	required init?(coder: NSCoder) {
+		super.init(coder: coder)
+		commonInit()
+	}
+	func commonInit() {
+		print(#function)
+		backgroundColor = .red
+		translatesAutoresizingMaskIntoConstraints = false
+		propStack.translatesAutoresizingMaskIntoConstraints = false
+		addSubview(propStack)
+		NSLayoutConstraint.activate([
+			propStack.widthAnchor.constraint(equalToConstant: 300.0 - 16.0),
+			propStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8.0),
+			propStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8.0),
+			propStack.topAnchor.constraint(equalTo: topAnchor, constant: 8.0),
+			propStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -40.0),
+		])
+		let doneButton = UIButton(type: .system)
+		doneButton.setTitle("Done", for: [])
+		doneButton.setContentHuggingPriority(.required, for: .horizontal)
+		let topRow = UIStackView()
+		topRow.addArrangedSubview(titleLabel)
+		topRow.addArrangedSubview(doneButton)
+		propStack.addArrangedSubview(topRow)
+		
+		layer.masksToBounds = true
+		layer.cornerRadius = 8
+		layer.borderColor = UIColor.blue.cgColor
+		layer.borderWidth = 2
+
+	}
+}
+class NumericView: ChangePropView {
+	
+	var valueChanged: ((CGFloat) -> ())?
+	
+	var title: String = "" {
+		didSet {
+			titleLabel.text = title
+		}
+	}
+	var theValue: CGFloat = 0 {
+		didSet {
+			stepper.value = Double(theValue)
+			valueLabel.text = "\(theValue)"
+		}
+	}
+	let valueLabel: UILabel = {
+		let v = UILabel()
+		v.textAlignment = .center
+		return v
+	}()
+	let stepper: UIStepper = {
+		let v = UIStepper()
+		return v
+	}()
+	
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		myInit()
+	}
+	required init?(coder: NSCoder) {
+		super.init(coder: coder)
+		myInit()
+	}
+	func myInit() {
+		let stack = UIStackView()
+		stack.addArrangedSubview(valueLabel)
+		stack.addArrangedSubview(stepper)
+		propStack.addArrangedSubview(stack)
+		stepper.addTarget(self, action: #selector(self.stepperChanged(_:)), for: .valueChanged)
+	}
+
+	@objc func stepperChanged(_ s: UIStepper) -> Void {
+		valueLabel.text = "\(s.value)"
+		valueChanged?(CGFloat(s.value))
+	}
+}
